@@ -155,8 +155,16 @@ class TsGUI(tk.Frame):
         self.canvas.delete('bm_info')
         self.bestmove_display = False
 
-root = tk.Tk()
-app = TsGUI(master=root)
-app.mainloop()
-    
-    
+class GUI():
+    def __init__(self, puzzle, solver=None):
+        pass
+
+    def play(self):
+        root = tk.Tk()
+        app = TsGUI(master=root)
+        app.mainloop()
+
+if __name__ == '__main__':
+    root = tk.Tk()
+    app = TsGUI(master=root)
+    app.mainloop()
