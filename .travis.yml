@@ -15,9 +15,8 @@ jobs:
         - python -m pip install --upgrade pip
       env: PATH=/c/Python36:/c/{ython36/Scripts:$PATH
 install:
-  - pip3 install --upgrade pip
-  - pip3 install -r requirements.txt
-  - pip3 install -e .
+  - python -m pip install -r requirements.txt
+  - python -m pip install -e .
 scripts:
   - pytest --cov puzzlesolver
   - bash <(curl -s https://codecov.io/bash) 
