@@ -20,7 +20,7 @@ jobs:
         - choco install python --version 3.6.0
         - python -m pip install --upgrade pip
         - python -m pip install -r requirements.txt
-        - python -m install -e .
+        - python -m pip install -e .
       env: PATH=/c/Python36:/c/Python36/Scripts:$PATH
 scripts:
   - pytest --cov puzzlesolver
