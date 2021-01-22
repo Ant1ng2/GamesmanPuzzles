@@ -13,7 +13,7 @@ jobs:
       before_install:
         - python3 -m pip install -r requirements.txt
         - python3 -m pip install -e .
-    - name: "3.8.0 on Windows"
+    - name: "3.6.0 on Windows"
       os: windows
       language: shell
       before_install:
