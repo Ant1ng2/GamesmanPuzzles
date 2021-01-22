@@ -7,12 +7,14 @@ jobs:
       os: osx
       osx_image: xcode11.2
       language: shell
+      before_install:
     - name: "3.8.0 on Windows"
       os: windows
       language: shell
       before_install:
         - choco install python --version 3.6.0
         - python -m pip install --upgrade pip
+        - doskey python3=python
       env: PATH=/c/Python36:/c/Python36/Scripts:$PATH
 install:
   - python3 -m pip install -r requirements.txt
