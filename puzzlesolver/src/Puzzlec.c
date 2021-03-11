@@ -86,12 +86,14 @@ PyTypeObject PuzzleType = {
 };
 
 int PyModule_AddPuzzle(PyObject* module) {
-    PyObject* sysPath = PySys_GetObject((char*)"path");
-
     PyObject* obj = PyImport_ImportModule("puzzlesolver.puzzles._models.puzzle");
     if (obj && PyObject_HasAttrString(obj, "Puzzle")) {
-        PyObject_Print(PyObject_Repr(obj), stdout, Py_PRINT_RAW);
-        printf("\n");
+        PyObject* type_obj = PyObject_GetAttrString(obj, "Puzzle");
+        if (PyType_Check(type_obj)) {
+            PyTypeObject* type_ptr = (PyTypeObject*) type_obj;
+            PuzzleType = *type_ptr;
+            return 1;
+        }
     }
 
     if (PyType_Ready(&PuzzleType) < 0) return -1;
