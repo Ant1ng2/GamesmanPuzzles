@@ -1,4 +1,5 @@
-from ...util import PuzzleException, classproperty, depreciated
+from ...util import PuzzleException
+from .util import depreciated, classproperty
 from . import Puzzle
 
 class ServerPuzzle(Puzzle):
