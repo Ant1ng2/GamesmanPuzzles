@@ -387,24 +387,25 @@ PyMethodDef Hanoic_methods[] = {
     {NULL}
 };
 
-PyTypeObject HanoicType = {
-    PyVarObject_HEAD_INIT(NULL, 0)
-    .tp_name = "Hanoi",
-    .tp_basicsize = sizeof(Hanoi),
-    .tp_dealloc = (destructor)Hanoi_dealloc,
-    .tp_repr = (reprfunc)Hanoi_repr,
-    .tp_hash = (hashfunc)Hanoi_hash,
-    .tp_str = (reprfunc)Hanoi_str,
-    .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
-    .tp_doc = "hanoic.Hanoi objects",
-    .tp_methods = Hanoic_methods,
-    .tp_members = Hanoic_members,
-    .tp_base = &ServerPuzzleType,
-    .tp_init = (initproc)Hanoi_init,
-    .tp_new = Hanoi_new
-};
 
-int PyModule_AddHanoi(PyObject* module) {
+int PyModule_AddHanoi(PyObject* module, PyTypeObject* sp_ptr) {
+    PyTypeObject HanoicType = {
+        PyVarObject_HEAD_INIT(NULL, 0)
+        .tp_name = "Hanoi",
+        .tp_basicsize = sizeof(Hanoi),
+        .tp_dealloc = (destructor)Hanoi_dealloc,
+        .tp_repr = (reprfunc)Hanoi_repr,
+        .tp_hash = (hashfunc)Hanoi_hash,
+        .tp_str = (reprfunc)Hanoi_str,
+        .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
+        .tp_doc = "hanoic.Hanoi objects",
+        .tp_methods = Hanoic_methods,
+        .tp_members = Hanoic_members,
+        .tp_base = sp_ptr,
+        .tp_init = (initproc)Hanoi_init,
+        .tp_new = Hanoi_new
+    };
+
     if (module == NULL) return -1;
     if (PyType_Ready(&HanoicType) < 0) return -1;
 

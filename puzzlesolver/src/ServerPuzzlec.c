@@ -66,14 +66,19 @@ PyTypeObject ServerPuzzleType = {
     .tp_new = ServerPuzzle_new
 };
 
+PyTypeObject* ServerPuzzleTypePtr;
+
 // TODO: Decrement the PyObject references if init fails
 int PyModule_AddServerPuzzle(PyObject *module) {
     PyObject* obj = PyImport_ImportModule("puzzlesolver.puzzles._models.serverPuzzle");
     if (obj && PyObject_HasAttrString(obj, "ServerPuzzle")) {
+        printf("Hello");
+        fflush(stdout);
+
         PyObject* type_obj = PyObject_GetAttrString(obj, "ServerPuzzle");
         if (PyType_Check(type_obj)) {
-            PyTypeObject* type_ptr = (PyTypeObject*) type_obj;
-            ServerPuzzleType = *type_ptr;
+            ServerPuzzleTypePtr = (PyTypeObject*) type_obj;
+            ServerPuzzleType = *ServerPuzzleTypePtr;
             return 1;
         }
     }

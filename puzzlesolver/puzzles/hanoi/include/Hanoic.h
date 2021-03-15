@@ -13,6 +13,6 @@ typedef struct {
     PyObject *variant;
 } Hanoi;
 
-int PyModule_AddHanoi(PyObject* module);
+int PyModule_AddHanoi(PyObject* module, PyTypeObject* sp_ptr);
 
 void PyModule_RemoveHanoi();

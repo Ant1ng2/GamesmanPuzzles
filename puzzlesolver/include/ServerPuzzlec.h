@@ -6,7 +6,7 @@ typedef struct {
     Puzzle super;
 } ServerPuzzle;
 
-PyTypeObject ServerPuzzleType;
+PyTypeObject* ServerPuzzleTypePtr;
 
 int PyModule_AddServerPuzzle(PyObject* module);
 

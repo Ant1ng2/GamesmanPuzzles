@@ -13,7 +13,7 @@ PyMODINIT_FUNC PyInit__puzzlesolverc(void) {
 
     if (PyModule_AddPuzzle(module) < 0 ||
         PyModule_AddServerPuzzle(module) < 0 ||
-        PyModule_AddHanoi(module) < 0) {
+        PyModule_AddHanoi(module, ServerPuzzleTypePtr) < 0) {
         PyModule_RemovePuzzle();
         PyModule_RemoveServerPuzzle();
         PyModule_RemoveHanoi();
