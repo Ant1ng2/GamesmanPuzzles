@@ -10,15 +10,20 @@ static struct PyModuleDef puzzlesolverc = {
 
 PyMODINIT_FUNC PyInit__puzzlesolverc(void) {
     PyObject* module = PyModule_Create(&puzzlesolverc);
-
-    if (PyModule_AddPuzzle(module) < 0 ||
-        PyModule_AddServerPuzzle(module) < 0 ||
-        PyModule_AddHanoi(module, ServerPuzzleTypePtr) < 0) {
+    
+    if (PyModule_AddPuzzle(module) < 0) {
         PyModule_RemovePuzzle();
+        return NULL;
+    }
+    else if (PyModule_AddServerPuzzle(module) < 0) {
         PyModule_RemoveServerPuzzle();
+        return NULL;
+    }
+    else if (PyModule_AddHanoi(module, ServerPuzzleTypePtr) < 0) {
         PyModule_RemoveHanoi();
         return NULL;
     }
+
     PyModule_AddStringMacro(module, UNSOLVABLE);
     PyModule_AddStringMacro(module, SOLVABLE);
     PyModule_AddStringMacro(module, UNDECIDED);

@@ -15,7 +15,7 @@ if sys.platform.startswith('linux'):
     ]
     ext_modules = [
         setuptools.Extension(
-            "puzzlesolver._puzzlesolverc", 
+            "_puzzlesolverc", 
             include_dirs=[
                 "puzzlesolver/puzzles/hanoi/include",
                 "puzzlesolver/include"

@@ -10,7 +10,7 @@
 #define MAX_RODS 20
 #define MAX_STR_LEN 220
 
-PyTypeObject HanoicType;
+PyTypeObject* HanoicTypePtr;
 
 // Helper functions
 
@@ -237,6 +237,9 @@ PyObject *Hanoi_isLegalPosition(PyObject *cls, PyObject *args, PyObject *kwds) {
     char* pid = NULL; 
     char* vid = NULL;
     static char* argnames[] = {"", "variantid", NULL};
+    printf("Hello\n");
+    fflush(stdout);
+
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "s|s", argnames, &pid, &vid)) {
         PyErr_SetString(PyExc_TypeError, "Invalid arguments");
         return NULL;
@@ -301,19 +304,19 @@ PyObject *Hanoi_doMove(PyObject *self, PyObject *args) {
         PyErr_SetString(PyExc_MemoryError, "Memory error or invalid move");
         return NULL; 
     }
-    Hanoi* newHanoi = Hanoi_new(&HanoicType, NULL, NULL);
-    Hanoi_init_empty(
-        newHanoi, 
-        ((Hanoi*) self)->rod_variant, 
-        ((Hanoi*) self)->disk_variant
-    );
-    if (newHanoi == NULL) { 
-        PyErr_SetString(PyExc_MemoryError, "Memory error");
-        deallocateBoard(newBoard); 
-        return NULL; 
-    }
-    newHanoi->board = newBoard;
-    return (PyObject*) newHanoi;
+    // Hanoi* newHanoi = Hanoi_new(HanoicTypePtr, NULL, NULL);
+    // Hanoi_init_empty(
+    //     newHanoi, 
+    //     ((Hanoi*) self)->rod_variant, 
+    //     ((Hanoi*) self)->disk_variant
+    // );
+    // if (newHanoi == NULL) { 
+    //     PyErr_SetString(PyExc_MemoryError, "Memory error");
+    //     deallocateBoard(newBoard); 
+    //     return NULL; 
+    // }
+    // newHanoi->board = newBoard;
+    // return (PyObject*) newHanoi;
 }
 
 PyObject *Hanoi_generateMoves(PyObject *self, PyObject *args, PyObject *kwds) {
@@ -339,7 +342,7 @@ static PyObject *Hanoi_generateSolutions(PyObject *self) {
     int num_sol = generateSolutions(solutions, ((Hanoi*)self)->board);
     if (num_sol < 0) { return NULL; }
     PyObject* list = PyList_New(num_sol);
-    PyObject* board = Hanoi_new(&HanoicType, NULL, NULL);
+    PyObject* board = Hanoi_new(HanoicTypePtr, NULL, NULL);
     ((Hanoi*) board)->board = solutions[0];
     PyList_SetItem(list, 0, board);
     return list;
@@ -389,30 +392,63 @@ PyMethodDef Hanoic_methods[] = {
 
 
 int PyModule_AddHanoi(PyObject* module, PyTypeObject* sp_ptr) {
-    PyTypeObject HanoicType = {
-        PyVarObject_HEAD_INIT(NULL, 0)
-        .tp_name = "Hanoi",
-        .tp_basicsize = sizeof(Hanoi),
-        .tp_dealloc = (destructor)Hanoi_dealloc,
-        .tp_repr = (reprfunc)Hanoi_repr,
-        .tp_hash = (hashfunc)Hanoi_hash,
-        .tp_str = (reprfunc)Hanoi_str,
-        .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
-        .tp_doc = "hanoic.Hanoi objects",
-        .tp_methods = Hanoic_methods,
-        .tp_members = Hanoic_members,
-        .tp_base = sp_ptr,
-        .tp_init = (initproc)Hanoi_init,
-        .tp_new = Hanoi_new
+    PyType_Spec spec;
+
+    PyType_Slot slots[] = {
+        {Py_tp_dealloc, (destructor)Hanoi_dealloc},
+        {Py_tp_repr, (reprfunc)Hanoi_repr},
+        {Py_tp_hash, (hashfunc)Hanoi_hash},
+        {Py_tp_str, (reprfunc)Hanoi_str},
+        {Py_tp_methods, Hanoic_methods},
+        {Py_tp_members, Hanoic_members},
+        {Py_tp_init, (initproc)Hanoi_init},
+        {Py_tp_new, Hanoi_new},
+        {0}
     };
 
-    if (module == NULL) return -1;
-    if (PyType_Ready(&HanoicType) < 0) return -1;
+    spec.name = "Hanoi";
+    spec.basicsize = sizeof(Hanoi);
+    spec.itemsize = sizeof(Hanoi);
+    spec.flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE;
+    spec.slots = slots;
 
-    Py_INCREF(&HanoicType);
-    PyModule_AddObject(module, "Hanoi", (PyObject *)&HanoicType);
- 
-    PyObject* dict = HanoicType.tp_dict;
+    PyObject* bases = PyTuple_New(1);
+    if (bases == NULL)
+        return -1;
+    if (PyTuple_SetItem(bases, 0, sp_ptr) < 0)
+        return -1;
+    if ((HanoicTypePtr = PyType_FromSpecWithBases(&spec, bases)) == NULL) {
+        PyErr_SetString(PyExc_SystemError, "NULL");
+        return -1;
+    }
+
+    // PyTypeObject HanoicType = {
+    //     PyVarObject_HEAD_INIT(NULL, 0)
+    //     .tp_name = "Hanoi",
+    //     .tp_basicsize = sizeof(Hanoi),
+    //     .tp_dealloc = (destructor)Hanoi_dealloc,
+    //     .tp_repr = (reprfunc)Hanoi_repr,
+    //     .tp_hash = (hashfunc)Hanoi_hash,
+    //     .tp_str = (reprfunc)Hanoi_str,
+    //     .tp_flags = Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
+    //     .tp_doc = "hanoic.Hanoi objects",
+    //     .tp_methods = Hanoic_methods,
+    //     .tp_members = Hanoic_members,
+    //     .tp_base = sp_ptr,
+    //     .tp_init = (initproc)Hanoi_init,
+    //     .tp_new = Hanoi_new
+    // };
+
+    // if (module == NULL) return -1;
+    // if (PyType_Ready(&HanoicType) < 0) return -1;
+
+    // Py_INCREF(HanoicTypePtr);
+    if (PyModule_AddObject(module, "Hanoi", (PyObject *)HanoicTypePtr) < 0)
+        return -1;
+    printf("Added to module\n");
+    fflush(stdout);
+
+    PyObject* dict = HanoicTypePtr->tp_dict;
 
     // Setting class members in tp_dict. Apparently not safe
     PyObject* author = PyUnicode_FromString("Anthony Ling");
@@ -455,6 +491,9 @@ int PyModule_AddHanoi(PyObject* module, PyTypeObject* sp_ptr) {
         Py_XDECREF(test_variant);
     }
 
+    printf("Editted dict\n");
+    fflush(stdout);
+
     Py_XDECREF(author);
     Py_XDECREF(puzzleid);
     Py_XDECREF(name);
@@ -468,5 +507,5 @@ int PyModule_AddHanoi(PyObject* module, PyTypeObject* sp_ptr) {
 }
 
 void PyModule_RemoveHanoi() {
-   Py_XDECREF(&HanoicType);
+   Py_XDECREF(HanoicTypePtr);
 }

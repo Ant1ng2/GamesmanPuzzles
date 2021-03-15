@@ -72,11 +72,11 @@ PyTypeObject* ServerPuzzleTypePtr;
 int PyModule_AddServerPuzzle(PyObject *module) {
     PyObject* obj = PyImport_ImportModule("puzzlesolver.puzzles._models.serverPuzzle");
     if (obj && PyObject_HasAttrString(obj, "ServerPuzzle")) {
-        printf("Hello");
-        fflush(stdout);
-
         PyObject* type_obj = PyObject_GetAttrString(obj, "ServerPuzzle");
         if (PyType_Check(type_obj)) {
+            printf("Found ServerPuzzle\n");
+            fflush(stdout);
+
             ServerPuzzleTypePtr = (PyTypeObject*) type_obj;
             ServerPuzzleType = *ServerPuzzleTypePtr;
             return 1;
@@ -87,7 +87,8 @@ int PyModule_AddServerPuzzle(PyObject *module) {
     if (PyType_Ready(&ServerPuzzleType) < 0) return -1;
 
     Py_INCREF(&ServerPuzzleType);
-    PyModule_AddObject(module, "ServerPuzzle", (PyObject *)&ServerPuzzleType);
+    if (PyModule_AddObject(module, "ServerPuzzle", (PyObject *)&ServerPuzzleType) < 0)
+        return -1;
 
     PyObject* dict = ServerPuzzleType.tp_dict;
     PyObject* list = PyList_New(0);
@@ -97,6 +98,7 @@ int PyModule_AddServerPuzzle(PyObject *module) {
 
     Py_DECREF(list);
 
+    ServerPuzzleTypePtr = &ServerPuzzleType;
     return 0;
 }
 

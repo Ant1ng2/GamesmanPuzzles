@@ -4,12 +4,15 @@ from ..util import PuzzleException
 
 # Put your dependencies here
 # from .hanoi import Hanoi
-try:
-    from .._puzzlesolverc import Hanoi
-    print("Using C implementation of Hanoi")
-except (ImportError, ModuleNotFoundError):
-    from .hanoi import Hanoi
-    print("Using Python implementation of Hanoi")
+from _puzzlesolverc import Hanoi
+print("Using C implementation of Hanoi")
+
+# try:
+#     from _puzzlesolverc import Hanoi
+#     print("Using C implementation of Hanoi")
+# except (ImportError, ModuleNotFoundError):
+#     from .hanoi import Hanoi
+#     print("Using Python implementation of Hanoi")
 
 from .lightsout import LightsOut
 from .pegSolitaire import Peg
@@ -20,15 +23,15 @@ from .bishop import Bishop
 from .topspin import TopSpin
 
 # Add your puzzle in the puzzleList
-puzzleList = {
-    Npuzzle.puzzleid: Npuzzle,
-    Hanoi.puzzleid: Hanoi,
-    LightsOut.puzzleid: LightsOut,
-    Peg.puzzleid: Peg,
-    Chairs.puzzleid: Chairs,
-    Bishop.puzzleid: Bishop,
-    TopSpin.puzzleid: TopSpin,
-}
+# puzzleList = {
+#     Npuzzle.puzzleid: Npuzzle,
+#     Hanoi.puzzleid: Hanoi,
+#     LightsOut.puzzleid: LightsOut,
+#     Peg.puzzleid: Peg,
+#     Chairs.puzzleid: Chairs,
+#     Bishop.puzzleid: Bishop,
+#     TopSpin.puzzleid: TopSpin,
+# }
 
 class PuzzleManagerClass:
     """Controls what type of solver is applicable for a Puzzle and its variant"""
@@ -92,4 +95,4 @@ class PuzzleManagerClass:
             if variantid is not None and puzzle.variant != variantid:
                 raise PuzzleException("VariantID doesn't match PuzzleID")
 
-PuzzleManager = PuzzleManagerClass(puzzleList)
+# PuzzleManager = PuzzleManagerClass(puzzleList)
