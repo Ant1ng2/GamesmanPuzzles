@@ -1,6 +1,5 @@
 #include "uthash.h"
 #include "utstack.h"
-#include "util.h"
 #include <stdio.h>
 #include <Python.h>
 
