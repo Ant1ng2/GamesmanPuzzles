@@ -248,12 +248,12 @@ class Hanoi(ServerPuzzle):
         Outputs:
             Iterable of moves, move must be hashable
         """
-        moves = set()
+        moves = list()
         rods = list(map(ffs, self.rods))
         for i in range(len(rods)):
             for j in range(len(rods)):
                 if rods[i] < rods[j]:
-                    moves.add((i, j))
+                    moves.append((i, j))
         return moves
 
     def generateSolutions(self):
