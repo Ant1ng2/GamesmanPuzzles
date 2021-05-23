@@ -20,13 +20,13 @@ puzzleList = {
     Npuzzle.id:     Npuzzle,
     Hanoi.id:       Hanoi,
     LightsOut.id:   LightsOut,
-    Peg.id:         Peg,
-    Chairs.id:      Chairs,
-    Bishop.id:      Bishop,
-    TopSpin.id:     TopSpin,
-    HopNDrop.id:    HopNDrop,
-    Rubiks.id:      Rubiks,
-    NQueens.id:     NQueens
+#    Peg.id:         Peg,
+#    Chairs.id:      Chairs,
+#    Bishop.id:      Bishop,
+#    TopSpin.id:     TopSpin,
+#    HopNDrop.id:    HopNDrop,
+#    Rubiks.id:      Rubiks,
+#    NQueens.id:     NQueens
 }
 
 class PuzzleManagerClass:
